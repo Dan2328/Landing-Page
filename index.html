@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Transforme seu negócio com nossa solução inovadora. Escolha o plano ideal e cadastre-se para uma consultoria gratuita!" />
+  <meta name="keywords" content="negócio, consultoria, solução empresarial, tecnologia, planos" />
+  <meta name="author" content="SeuNegócio.com" />
+  <title>Landing Page | Seu Negócio</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+    }
+    .header-bg {
+      background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+      position: relative;
+      overflow: hidden;
+    }
+    .header-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1;
+    }
+    .header-content {
+      animation: fadeInScale 1s ease-out forwards;
+      position: relative;
+      z-index: 2;
+    }
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      max-width: 100%;
+      background: #000;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .form-error {
+      color: #ef4444;
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+    }
+    .plan-card, .benefit-card, .form-container, .payment-container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, opacity 0.5s ease;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .plan-card.animate, .benefit-card.animate, .form-container.animate, .payment-container.animate {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .plan-card:hover, .benefit-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+    }
+    .btn {
+      background: linear-gradient(90deg, #1e40af, #3b82f6);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      transition: background 0.3s ease, transform 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+    }
+    .btn:hover {
+      background: linear-gradient(90deg, #1e3a8a, #2563eb);
+      transform: scale(1.05);
+    }
+    .btn:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+      animation: bounce 0.3s ease;
+    }
+    .saiba-mais::after {
+      content: '+';
+      font-size: 1.2rem;
+      transition: transform 0.3s ease;
+    }
+    .saiba-mais.show::after {
+      content: '−';
+      transform: rotate(180deg);
+    }
+    .hidden-details, .payment-section {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.5s ease, max-height 0.5s ease;
+      max-height: 0;
+      overflow: hidden;
+    }
+    .hidden-details.show, .payment-section.show {
+      display: block;
+      opacity: 1;
+      max-height: 500px;
+    }
+    .confirmation-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .confirmation-modal.show {
+      display: flex;
+      animation: slideIn 0.5s ease forwards;
+    }
+    .confirmation-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      text-align: center;
+      max-width: 400px;
+      transform: translateY(-50px);
+      opacity: 0;
+      animation: fadeIn 0.5s ease forwards 0.2s;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+    .payment-option {
+      border: 2px solid transparent;
+      border-radius: 8px;
+      transition: border-color 0.3s ease, background 0.3s ease;
+      background: #f9fafb;
+    }
+    .payment-option:hover {
+      background: #f3f4f6;
+    }
+    .payment-option.selected {
+      border-color: #1e40af;
+      background: #eff6ff;
+    }
+    input, select {
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 0.75rem;
+      transition: border-color 0.3s ease;
+    }
+    input:focus, select:focus {
+      border-color: #1e40af;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+    @keyframes slideIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInScale {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes bounce {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+  </style>
+</head>
+<body>
+  <header class="header-bg text-white py-16 px-4 text-center relative">
+    <div class="absolute inset-0">
+      <img src="https://images.unsplash.com/photo-1556761175-4b46a572b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" 
+           alt="Equipe de negócios colaborando" 
+           class="w-full h-full object-cover opacity-50" />
+    </div>
+    <div class="relative max-w-4xl mx-auto header-content">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">Transforme Seu Negócio com a Nossa Solução!</h1>
+      <p class="text-lg md:text-xl">Escolha o plano ideal e cadastre-se para uma consultoria gratuita.</p>
+    </div>
+  </header>
+
+  <section class="py-16 px-4 max-w-5xl mx-auto">
+    <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Por que Escolher a Gente?</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="benefit-card bg-white p-6">
+        <h3 class="text-xl font-semibold mb-2 text-gray-800">🚀 Resultado Rápido</h3>
+        <p class="text-gray-600">Veja mudanças visíveis já nas primeiras semanas de uso da nossa solução.</p>
+      </div>
+      <div class="benefit-card bg-white p-6">
+        <h3 class="text-xl font-semibold mb-2 text-gray-800">📊 Dados Inteligentes</h3>
+        <p class="text-gray-600">Análises avançadas que ajudam você a tomar decisões mais assertivas.</p>
+      </div>
+      <div class="benefit-card bg-white p-6">
+        <h3 class="text-xl font-semibold mb-2 text-gray-800">🤝 Suporte Especializado</h3>
+        <p class="text-gray-600">Equipe dedicada pronta para te ajudar a qualquer momento.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16 px-4 max-w-5xl mx-auto bg-gray-50">
+    <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Nosso Produto</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+      <div>
+        <h3 class="text-2xl font-semibold mb-4 text-gray-800">Solução Empresarial Inovadora</h3>
+        <p class="mb-4 text-gray-600">Nossa plataforma oferece ferramentas poderosas para otimizar processos, aumentar a produtividade e impulsionar o crescimento do seu negócio.</p>
+        <ul class="list-disc list-inside mb-4 text-gray-600">
+          <li>Automatização de processos</li>
+          <li>Relatórios personalizados</li>
+          <li>Suporte 24/7</li>
+          <li>Integração com ferramentas populares</li>
+        </ul>
+        <button id="saibaMais" class="btn saiba-mais" aria-expanded="false" aria-controls="extraDetails">
+          Saiba Mais
+        </button>
+        <div id="extraDetails" class="hidden-details mt-4 p-4 bg-gray-100 rounded-lg">
+          <h4 class="text-lg font-semibold mb-2 text-gray-800">Mais Sobre Nossa Solução</h4>
+          <p class="text-gray-600">Nossa plataforma é projetada para empresas de todos os tamanhos, com escalabilidade e personalização para atender às suas necessidades específicas. Integre com CRMs, ferramentas de marketing e sistemas ERP em minutos. Além disso, oferecemos treinamentos gratuitos para sua equipe e atualizações regulares com novos recursos.</p>
+        </div>
+      </div>
+      <div class="video-container">
+        <iframe src="https://www.youtube.com/embed/-aQPN70WT1M?si=VDWyIFTfU2iTecTa" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>" 
+                title="Vídeo promocional do produto" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen></iframe>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16 px-4 max-w-5xl mx-auto">
+    <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Nossos Planos</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="plan-card bg-white p-6 text-center">
+        <h3 class="text-xl font-semibold mb-2 text-gray-800">Básico</h3>
+        <p class="text-3xl font-bold mb-4 text-blue-600">R$ 99/mês</p>
+        <ul class="list-disc list-inside mb-4 text-left text-gray-600">
+          <li>Automatização básica</li>
+          <li>Relatórios padrão</li>
+          <li>Suporte por e-mail</li>
+        </ul>
+        <a href="#cadastro" class="btn" data-plan="Básico">Escolher Plano</a>
+      </div>
+      <div class="plan-card bg-white p-6 text-center border-2 border-blue-600">
+        <h3 class="text-xl font-semibold mb-2 text-gray-800">Pro</h3>
+        <p class="text-3xl font-bold mb-4 text-blue-600">R$ 199/mês</p>
+        <ul class="list-disc list-inside mb-4 text-left text-gray-600">
+          <li>Automatização avançada</li>
+          <li>Relatórios personalizados</li>
+          <li>Suporte 24/7</li>
+          <li>Integração com CRM</li>
+        </ul>
+        <a href="#cadastro" class="btn" data-plan="Pro">Escolher Plano</a>
+      </div>
+      <div class="plan-card bg-white p-6 text-center">
+        <h3 class="text-xl font-semibold mb-2 text-gray-800">Enterprise</h3>
+        <p class="text-3xl font-bold mb-4 text-blue-600">R$ 499/mês</p>
+        <ul class="list-disc list-inside mb-4 text-left text-gray-600">
+          <li>Automatização completa</li>
+          <li>Relatórios avançados</li>
+          <li>Suporte dedicado</li>
+          <li>Integrações ilimitadas</li>
+        </ul>
+        <a href="#cadastro" class="btn" data-plan="Enterprise">Escolher Plano</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="cadastro" class="py-16 px-4 max-w-2xl mx-auto">
+    <div class="form-container bg-white p-8">
+      <h2 class="text-3xl font-bold text-center mb-6 text-gray-800">Cadastre-se Agora</h2>
+      <form id="leadForm" novalidate>
+        <div class="mb-4">
+          <input type="text" id="nome" placeholder="Seu nome completo" required 
+                 class="w-full" aria-label="Nome completo" />
+          <span id="nomeError" class="form-error hidden"></span>
+        </div>
+        <div class="mb-4">
+          <input type="email" id="email" placeholder="Seu e-mail" required 
+                 class="w-full" aria-label="E-mail" />
+          <span id="emailError" class="form-error hidden"></span>
+        </div>
+        <div class="mb-4">
+          <input type="tel" id="telefone" placeholder="Seu telefone (opcional)" 
+                 class="w-full" aria-label="Telefone" />
+          <span id="telefoneError" class="form-error hidden"></span>
+        </div>
+        <div class="mb-4">
+          <select id="plano" class="w-full" aria-label="Escolha um plano">
+            <option value="">Selecione um plano (opcional)</option>
+            <option value="Básico">Básico - R$ 99/mês</option>
+            <option value="Pro">Pro - R$ 199/mês</option>
+            <option value="Enterprise">Enterprise - R$ 499/mês</option>
+          </select>
+        </div>
+        <button type="submit" class="btn w-full">Quero me cadastrar</button>
+      </form>
+    </div>
+  </section>
+
+  <section id="payment" class="payment-section py-16 px-4 max-w-2xl mx-auto">
+    <div class="payment-container bg-white p-8">
+      <h2 class="text-3xl font-bold text-center mb-6 text-gray-800">Finalizar Pagamento</h2>
+      <p id="selectedPlan" class="text-center mb-4 text-gray-600"></p>
+      <form id="paymentForm" novalidate>
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-2 text-gray-800">Selecione o método de pagamento</label>
+          <div class="grid grid-cols-1 gap-4">
+            <div class="payment-option p-4 cursor-pointer" data-payment="pix">
+              <input type="radio" name="paymentMethod" id="pix" value="pix" required class="mr-2">
+              <label for="pix" class="cursor-pointer text-gray-800">Pix</label>
+              <p class="text-sm text-gray-600 mt-2 hidden pix-details">Escaneie o QR code ou use a chave Pix fornecida no checkout.</p>
+            </div>
+            <div class="payment-option p-4 cursor-pointer" data-payment="credit-card">
+              <input type="radio" name="paymentMethod" id="credit-card" value="credit-card" required class="mr-2">
+              <label for="credit-card" class="cursor-pointer text-gray-800">Cartão de Crédito</label>
+              <div class="text-sm text-gray-600 mt-2 hidden credit-card-details">
+                <input type="text" placeholder="Número do cartão" class="w-full mb-2" aria-label="Número do cartão" />
+                <div class="flex gap-2">
+                  <input type="text" placeholder="Validade (MM/AA)" class="w-1/2" aria-label="Validade do cartão" />
+                  <input type="text" placeholder="CVV" class="w-1/2" aria-label="CVV do cartão" />
+                </div>
+              </div>
+            </div>
+            <div class="payment-option p-4 cursor-pointer" data-payment="boleto">
+              <input type="radio" name="paymentMethod" id="boleto" value="boleto" required class="mr-2">
+              <label for="boleto" class="cursor-pointer text-gray-800">Boleto</label>
+              <p class="text-sm text-gray-600 mt-2 hidden boleto-details">O boleto será gerado e enviado para o seu e-mail.</p>
+            </div>
+          </div>
+          <span id="paymentError" class="form-error hidden"></span>
+        </div>
+        <button type="submit" class="btn w-full">Confirmar Pagamento</button>
+      </form>
+    </div>
+  </section>
+
+  <div id="confirmationModal" class="confirmation-modal">
+    <div class="confirmation-content">
+      <h3 class="text-2xl font-bold mb-4 text-gray-800">Cadastro Concluído!</h3>
+      <p id="confirmationMessage" class="mb-4 text-gray-600"></p>
+      <button id="closeModal" class="btn">Fechar</button>
+    </div>
+  </div>
+
+  <footer class="bg-gray-900 text-white text-center py-6">
+    <p>© 2025 SeuNegócio.com - Todos os direitos reservados.</p>
+  </footer>
+
+  <script>
+    let isRegistered = false;
+    let selectedPlan = '';
+
+    // Animate sections on load
+    const animateSections = () => {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+          if (entry.isIntersecting) {
+            setTimeout(() => {
+              entry.target.classList.add('animate');
+            }, index * 200);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.plan-card, .benefit-card, .form-container, .payment-container').forEach(el => {
+        observer.observe(el);
+      });
+    };
+
+    // Toggle extra details for "Saiba Mais"
+    document.getElementById('saibaMais').addEventListener('click', function() {
+      const details = document.getElementById('extraDetails');
+      const isExpanded = this.getAttribute('aria-expanded') === 'true';
+      this.setAttribute('aria-expanded', !isExpanded);
+      this.classList.toggle('show');
+      details.classList.toggle('show');
+      this.textContent = isExpanded ? 'Saiba Mais' : 'Ver Menos';
+    });
+
+    // Plan selection
+    document.querySelectorAll('[data-plan]').forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        selectedPlan = button.getAttribute('data-plan');
+        document.getElementById('plano').value = selectedPlan;
+        if (!isRegistered) {
+          alert(`Por favor, complete o cadastro para prosseguir com o plano ${selectedPlan}.`);
+          window.location.hash = 'cadastro';
+        } else {
+          document.getElementById('selectedPlan').textContent = `Plano selecionado: ${selectedPlan}`;
+          document.getElementById('payment').classList.add('show');
+          window.location.hash = 'payment';
+        }
+      });
+    });
+
+    // Form submission handling
+    document.getElementById('leadForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const nome = document.getElementById('nome').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const telefone = document.getElementById('telefone').value.trim();
+      const plano = document.getElementById('plano').value;
+      const nomeError = document.getElementById('nomeError');
+      const emailError = document.getElementById('emailError');
+      const telefoneError = document.getElementById('telefoneError');
+
+      // Reset error states
+      nomeError.classList.add('hidden');
+      emailError.classList.add('hidden');
+      telefoneError.classList.add('hidden');
+
+      let hasError = false;
+
+      // Validate name (at least two words)
+      if (!nome) {
+        nomeError.textContent = 'Por favor, preencha o nome.';
+        nomeError.classList.remove('hidden');
+        hasError = true;
+      } else if (nome.split(/\s+/).length < 2) {
+        nomeError.textContent = 'O nome deve conter pelo menos dois palavras (nome e sobrenome).';
+        nomeError.classList.remove('hidden');
+        hasError = true;
+      }
+
+      // Validate email
+      if (!email) {
+        emailError.textContent = 'Por favor, preencha o e-mail.';
+        emailError.classList.remove('hidden');
+        hasError = true;
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        emailError.textContent = 'Por favor, insira um e-mail válido.';
+        emailError.classList.remove('hidden');
+        hasError = true;
+      }
+
+      // Validate phone (optional, but must match Brazilian format if provided)
+      if (telefone && !/^\(\d{2}\)\s?\d{4,5}-\d{4}$/.test(telefone)) {
+        telefoneError.textContent = 'Telefone inválido. Use o formato (XX) XXXXX-XXXX ou (XX) XXXX-XXXX.';
+        telefoneError.classList.remove('hidden');
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      // Show confirmation modal
+      const modal = document.getElementById('confirmationModal');
+      const message = document.getElementById('confirmationMessage');
+      message.textContent = `Obrigado, ${nome}! Seus dados foram recebidos com sucesso!` + 
+                           (plano ? ` Você selecionou o plano ${plano}.` : '');
+      modal.classList.add('show');
+      isRegistered = true;
+      this.reset();
+
+      // Show payment section if plan is selected
+      if (plano) {
+        selectedPlan = plano;
+        document.getElementById('selectedPlan').textContent = `Plano selecionado: ${selectedPlan}`;
+        document.getElementById('payment').classList.add('show');
+        window.location.hash = 'payment';
+      }
+    });
+
+    // Payment form handling
+    document.getElementById('paymentForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const selectedMethod = document.querySelector('input[name="paymentMethod"]:checked');
+      const paymentError = document.getElementById('paymentError');
+      if (!selectedMethod) {
+        paymentError.textContent = 'Por favor, selecione um método de pagamento.';
+        paymentError.classList.remove('hidden');
+        return;
+      }
+      paymentError.classList.add('hidden');
+      alert(`Pagamento com ${selectedMethod.value} confirmado para o plano ${selectedPlan}!`);
+      this.reset();
+      document.getElementById('payment').classList.remove('show');
+      document.querySelectorAll('.payment-option').forEach(opt => {
+        opt.classList.remove('selected');
+        opt.querySelector('.text-sm').classList.add('hidden');
+      });
+    });
+
+    document.querySelectorAll('.payment-option').forEach(option => {
+      option.addEventListener('click', () => {
+        document.querySelectorAll('.payment-option').forEach(opt => {
+          opt.classList.remove('selected');
+          opt.querySelector('.text-sm').classList.add('hidden');
+        });
+        option.classList.add('selected');
+        option.querySelector('.text-sm').classList.remove('hidden');
+        option.querySelector('input').checked = true;
+      });
+    });
+
+    // Close confirmation modal
+    document.getElementById('closeModal').addEventListener('click', function() {
+      document.getElementById('confirmationModal').classList.remove('show');
+    });
+
+    // Run animations on load
+    animateSections();
+  </script>
+</body>
+</html>
